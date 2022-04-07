@@ -21,12 +21,10 @@ public class SpawnPointsGenerator : MonoBehaviour
         for (int i = 0; i < numberOfSpawns; i++)
         {
             int index = Random.Range(0,3);
-            MeshRenderer mesh = _spawnPoint.GetComponent<MeshRenderer>();
-            Transform positionPoint = _spawnPoint.GetComponent<Transform>();
+            MeshRenderer mesh = _spawnPoint.GetComponent<MeshRenderer>();            
             mesh.material = _material[index];
             GameObject spawnPoint = Instantiate(_spawnPoint, new Vector3(offsetFromPoint, 2, 50), Quaternion.identity);
-            offsetFromPoint += offsetDistanse;
-            positionPoint.position = new Vector3(offsetFromPoint, 2, 50);
+            offsetFromPoint += offsetDistanse;            
             _points.Add(spawnPoint);
         }
     }

@@ -5,22 +5,21 @@ public class SoundButton : MonoBehaviour
 {
     [SerializeField] private UnityEvent _pressed;
 
-    private Transform _transform;
-    private float _cordinateY;
+    private float _startCordinateY;
 
     private void Start()
     {
-        _transform = gameObject.transform;
-        _cordinateY = _transform.position.y;
+        _startCordinateY = transform.position.y;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         float howLongY = 0.5f;
+
         if (other.TryGetComponent<Bot>(out Bot bot))
         {
             _pressed?.Invoke();            
-            _transform.position = new Vector3(_transform.position.x, (howLongY - _transform.position.y), _transform.position.z);
+            transform.position = new Vector3(transform.position.x, (howLongY - transform.position.y), transform.position.z);
         }
     }
 
@@ -28,7 +27,7 @@ public class SoundButton : MonoBehaviour
     {
         if (other.TryGetComponent<Bot>(out Bot bot))
         {
-            _transform.position = new Vector3(_transform.position.x, _cordinateY, _transform.position.z);
+            transform.position = new Vector3(transform.position.x, _startCordinateY, transform.position.z);
         }
     }
 }

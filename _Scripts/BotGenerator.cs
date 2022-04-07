@@ -5,10 +5,10 @@ using UnityEngine;
 public class BotGenerator : MonoBehaviour
 {
     [SerializeField] private Bot _prefabBot;
+    [SerializeField] private SpawnPointsGenerator _spawn;
     [SerializeField] private float _timeSpawn;
 
-    private SpawnPointsGenerator _spawn;
-    private List<Bot> _bots;
+    private List<Bot> _bots;   
 
     private void OnValidate()
     {
@@ -19,7 +19,6 @@ public class BotGenerator : MonoBehaviour
     private void Start()
     {
         _bots = new List<Bot>();
-        _spawn = GameObject.FindObjectOfType<SpawnPointsGenerator>();
         StartCoroutine(CreatNewBot());
     }
 
@@ -31,9 +30,10 @@ public class BotGenerator : MonoBehaviour
     private void RemoveWhoReachedLimit()
     {
         int coordinateLimit = -20;
+
         for (int i = 0; i < _bots.Count; i++)
         {
-            if (_bots[i].gameObject.GetComponent<Transform>().position.z < coordinateLimit)
+            if (_bots[i].transform.position.z < coordinateLimit)
             {
                 Destroy(_bots[i].gameObject);
                 _bots.Remove(_bots[i]);
@@ -46,15 +46,16 @@ public class BotGenerator : MonoBehaviour
         int numberOfBots = 100;
         int countSpawning = _spawn.Points.Count;
         int number = 0;
- 
+        var expectations = new WaitForSeconds(_timeSpawn);
+
         for (int i = 0; i < numberOfBots; i++)
         {
             int index = Random.Range(0, countSpawning);
-            var position = _spawn.Points[index].GetComponent<Transform>();
-            Bot newBot = Instantiate(_prefabBot, new Vector3(position.position.x, 8, position.position.z), Quaternion.identity);
+            var position = _spawn.Points[index].transform.position;
+            Bot newBot = Instantiate(_prefabBot, new Vector3(position.x, 8, position.z), Quaternion.identity);
             MeshRenderer meshBot = newBot.GetComponent<MeshRenderer>();
             meshBot.material = _spawn.Points[index].GetComponent<MeshRenderer>().material;
-            yield return new WaitForSeconds(_timeSpawn);
+            yield return expectations;
             number++;
             _bots.Add(newBot);
             if (number >= countSpawning)
